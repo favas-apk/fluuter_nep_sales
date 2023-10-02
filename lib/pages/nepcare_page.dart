@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 
 
+
 import 'dart:convert' as convert;
 
 
@@ -30,6 +31,7 @@ class _MyPageState extends State<NepCarePage> {
   late DateTime _from_date, _to_date;
 
 
+
 @override
   void initState() {
   DateTime now = DateTime.now();
@@ -41,7 +43,18 @@ class _MyPageState extends State<NepCarePage> {
   }
 
 
+_showDatePicker()
+{
+  showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2000), lastDate: DateTime(2028)).then((value) {
 
+
+
+    setState(() {
+      _from_date=value!;
+    });
+  });
+
+}
 
 
   @override
@@ -79,7 +92,13 @@ class _MyPageState extends State<NepCarePage> {
 
                           SizedBox(
                               width: MediaQuery.of(context).size.width * 0.18,
-                              child:const Text('From')),
+                              child:InkWell(
+                                  onTap: (){
+
+          _showDatePicker();
+
+                                  },
+                                  child: const Text('From'))),
 
 
 

@@ -258,7 +258,111 @@ List<String> _list_staff=["favas","fazal","manna","janna","fazalurahman"];
 
                             child:  Text(("1").toString(),style:  TextStyle(color: Colors.black,fontFamily: 'Times',fontSize: 18),),
                           ),
+                          Container(
 
+
+
+                            width: 60,height: 30,
+
+
+                            alignment: Alignment.center,
+                            decoration: borderBRDec(),
+
+                            child:  Text(("1").toString(),style:  TextStyle(color: Colors.black,fontFamily: 'Times',fontSize: 18),),
+                          ),
+                          Container(
+
+
+
+                            width: 60,height: 30,
+
+
+                            alignment: Alignment.center,
+                            decoration: borderBRDec(),
+
+                            child:  Text(("1").toString(),style:  TextStyle(color: Colors.black,fontFamily: 'Times',fontSize: 18),),
+                          ),
+                          Container(
+
+
+
+                            width: 60,height: 30,
+
+
+                            alignment: Alignment.center,
+                            decoration: borderBRDec(),
+
+                            child:  Text(("1").toString(),style:  TextStyle(color: Colors.black,fontFamily: 'Times',fontSize: 18),),
+                          ),
+                          Container(
+
+
+
+                            width: 60,height: 30,
+
+
+                            alignment: Alignment.center,
+                            decoration: borderBRDec(),
+
+                            child:  Text(("1").toString(),style:  TextStyle(color: Colors.black,fontFamily: 'Times',fontSize: 18),),
+                          ),
+                         const   SizedBox(
+
+
+
+                            width: 60,height: 30,
+
+
+
+
+                          ),
+                          Container(
+
+
+
+                            width: 60,height: 30,
+
+
+                            alignment: Alignment.center,
+                            decoration: borderBRTDec(),
+
+                            child:  Text(("1").toString(),style:  TextStyle(color: Colors.black,fontFamily: 'Times',fontSize: 18),),
+                          ),
+                          Container(
+
+
+
+                            width: 60,height: 30,
+
+
+                            alignment: Alignment.center,
+                            decoration: borderBRDec(),
+
+                            child:  Text(("1").toString(),style:  TextStyle(color: Colors.black,fontFamily: 'Times',fontSize: 18),),
+                          ),
+
+                          const   SizedBox(
+
+
+
+                            width: 60,height: 30,
+
+
+
+
+                          ),
+                          Container(
+
+
+
+                            width: 60,height: 30,
+
+
+                            alignment: Alignment.center,
+                            decoration: borderBRTDec(),
+
+                            child:  Text(("1").toString(),style:  TextStyle(color: Colors.black,fontFamily: 'Times',fontSize: 18),),
+                          ),
 
                         ],
                       );

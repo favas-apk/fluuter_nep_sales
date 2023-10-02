@@ -13,6 +13,7 @@ import 'dart:convert' as convert;
 import '../commons/Colorss.dart';
 import '../commons/Constants.dart';
 import '../commons/ProjectFunction.dart';
+import '../jumps/jump.dart';
 
 
 
@@ -315,14 +316,17 @@ class _MyPageState extends State<LoginPage> {
                         minimumSize: const Size.fromHeight(40), // NEW
                       ),
                       onPressed: () {
-                        if (_txt_username_controller.text.trim().length == 0 ||
-                            _txt_password_controller.text.trim().length == 0) {
+                        if (_txt_username_controller.text.trim().length == 0 || _txt_password_controller.text.trim().length == 0) {
 
                           showToast("Please Enter Username and Password ");
 
 
-                 //         return;
+
                         }
+                        else
+                          {
+                            jumb_to_tab_page(context);
+                          }
 
                         if (loading) {
                           return;
