@@ -154,6 +154,10 @@ String getMonthName(int montnNo)
 
 }
 
+
+
+
+
 void showToast(String msg)
 {
 
@@ -179,6 +183,24 @@ void showToast(String msg)
 
 
 
+
+String toCamelCase(String input) {
+  List<String> words = input.split(' ');
+
+  if (words.isEmpty) {
+    return '';
+  }
+
+  String result = '';
+
+  for (String word in words) {
+    if (word.isNotEmpty) {
+      result ="$result ${word[0].toUpperCase()}${word.substring(1).toLowerCase()}";
+    }
+  }
+
+  return result;
+}
 
 
 

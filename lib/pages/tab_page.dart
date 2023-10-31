@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluuter_nep_sales/pages/nepcare_page.dart';
 import 'package:fluuter_nep_sales/pages/sales_page.dart';
+import 'package:fluuter_nep_sales/pages/schedule.dart';
 
 import '../commons/Colorss.dart';
 
@@ -26,7 +27,7 @@ class _MyPageState extends State<TabPage>  with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this); // Adjust the length as needed
+    _tabController = TabController(length: 3, vsync: this); // Adjust the length as needed
     super.initState();
 
 
@@ -53,6 +54,7 @@ class _MyPageState extends State<TabPage>  with SingleTickerProviderStateMixin {
           tabs: const [
             Tab(text: 'Nep Care',),
             Tab(text: 'Sales'),
+            Tab(text: 'Schedule'),
 
           ],
         ),
@@ -66,7 +68,8 @@ class _MyPageState extends State<TabPage>  with SingleTickerProviderStateMixin {
           NepCarePage(),
           // Content for Tab 2
 
-          SalesPage()
+          SalesPage(),
+          const SchedulePage(),
 
 
         ],
