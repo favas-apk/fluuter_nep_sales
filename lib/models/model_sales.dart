@@ -12,8 +12,9 @@ class ModelSales {
   String? closed;
   String? declined;
   String? follow_up;
+  String? tot_days;
 
-  ModelSales({this.staff, this.lead, this.demo, this.imp, this.pend, this.closed, this.declined,this.follow_up});
+  ModelSales({this.staff, this.lead, this.demo, this.imp, this.pend, this.closed, this.declined,this.follow_up,this.tot_days});
 
 
   factory ModelSales.fromJson(Map<String, dynamic> json) => _$ModelSalesFromJson(json);

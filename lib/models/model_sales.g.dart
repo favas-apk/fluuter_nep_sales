@@ -14,6 +14,8 @@ ModelSales _$ModelSalesFromJson(Map<String, dynamic> json) => ModelSales(
       pend: json['pend'] as String?,
       closed: json['closed'] as String?,
       declined: json['declined'] as String?,
+      follow_up: json['follow_up'] as String?,
+      tot_days: json['tot_days'] as String?,
     );
 
 Map<String, dynamic> _$ModelSalesToJson(ModelSales instance) =>
@@ -25,4 +27,6 @@ Map<String, dynamic> _$ModelSalesToJson(ModelSales instance) =>
       'pend': instance.pend,
       'closed': instance.closed,
       'declined': instance.declined,
+      'follow_up': instance.follow_up,
+      'tot_days': instance.tot_days,
     };
