@@ -22,6 +22,8 @@ class _MyPageState extends State<SalesPage> {
 
   List<ModelSales> _list_sales = [];
   var _details_avg = [];
+  var _details_lead_decl = [];
+  var _details_demo_decl = [];
 
   @override
   void initState() {
@@ -84,10 +86,52 @@ class _MyPageState extends State<SalesPage> {
               if(_details_avg[j]["staffid"]== staffid)
                 {
                   res=_details_avg[j]["tot_days"];
+                  break;
                 }
 
 
             }
+
+
+
+    return res;
+  }
+
+
+  Future<String> _getLeadDeclEmp(String staffid) async
+  {
+
+    String res="";
+    for(int j=0;j<_details_lead_decl.length;j++)
+    {
+      if(_details_lead_decl[j]["staffid"]== staffid)
+      {
+        res=_details_lead_decl[j]["lead_decl"];
+        break;
+      }
+
+
+    }
+
+
+
+    return res;
+  }
+
+  Future<String> _getDemoDeclEmp(String staffid) async
+  {
+
+    String res="0";
+    for(int j=0;j<_details_demo_decl.length;j++)
+    {
+      if(_details_demo_decl[j]["staffid"]== staffid)
+      {
+        res=_details_demo_decl[j]["demo_decl"];
+        break;
+      }
+
+
+    }
 
 
 
@@ -111,10 +155,13 @@ class _MyPageState extends State<SalesPage> {
       if (result == 1) {
         var _details_sales = jsonResponse["details_sales"];
         _details_avg = jsonResponse["details_avg"];
+        _details_lead_decl = jsonResponse["details_lead_decl"];
+        _details_demo_decl = jsonResponse["details_demo_decl"];
 
 
 
-        var lead = "",
+
+        var lead = "0",
             demo = "0",
             imp = "0",
             c_pend = "0",
@@ -158,19 +205,23 @@ class _MyPageState extends State<SalesPage> {
           } else {
 
 
-            int tot_p = int.parse(c_pend) + int.parse(p_pend);
+
 
         var tot_days=   await  _gettotDaysofEmp(pre_staffid );
+        var declined_lead=   await  _getLeadDeclEmp(pre_staffid );
+        var declined_demo=   await  _getDemoDeclEmp(pre_staffid );
 
             ModelSales modelSales = ModelSales(
                 staff: pre_emp,
-                lead: (lead+demo+imp+comp),
-                demo: (demo+imp+comp),
-                imp:( imp+comp),
-                pend: tot_p.toString(),
+                lead: (int.parse(lead) + int.parse(demo)  +  int.parse(imp) +   int.parse(p_pend)  + int.parse(c_pend) + int.parse(comp) ).toString(),
+                demo: (    int.parse(demo)  +  int.parse(imp) +   int.parse(p_pend)  + int.parse(c_pend) + int.parse(comp) ).toString(),
+                imp:   (   int.parse(imp) +   int.parse(p_pend)  + int.parse(c_pend) + int.parse(comp) ).toString(),
+                pend:  (      int.parse(p_pend)  + int.parse(c_pend) ).toString(),
                 closed: comp,
                 declined: decl,
-              tot_days: tot_days
+              tot_days: tot_days,
+              declined_lead: declined_lead,
+              declined_demo:declined_demo
 
             );
 
@@ -670,13 +721,17 @@ class _MyPageState extends State<SalesPage> {
                             width: 60,
                             height: 30,
                           ),
+
+
+
+
                           Container(
                             width: 60,
                             height: 30,
                             alignment: Alignment.center,
                             decoration: borderBRTDec(),
                             child: Text(
-                              "${((int.parse(_list_sales[index].declined!) / int.parse(_list_sales[index].lead!)) * 100).toStringAsFixed(1)}%",
+                              "${((int.parse(_list_sales[index].declined_lead!) / int.parse(_list_sales[index].demo!)) * 100).toStringAsFixed(1)}%",
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontFamily: 'Times',
@@ -688,14 +743,18 @@ class _MyPageState extends State<SalesPage> {
                             height: 30,
                             alignment: Alignment.center,
                             decoration: borderBRDec(),
-                            child: Text(
-                              "${((int.parse(_list_sales[index].declined!) / int.parse(_list_sales[index].demo!)) * 100).toStringAsFixed(1)}%",
+                            child:     Text(
+                              "${((int.parse(_list_sales[index].declined_demo!) / int.parse(_list_sales[index].demo!)) * 100).toStringAsFixed(1)}%",
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontFamily: 'Times',
                                   fontSize: 18),
                             ),
                           ),
+
+
+
+
                           const SizedBox(
                             width: 60,
                             height: 30,
