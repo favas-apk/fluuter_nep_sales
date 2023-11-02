@@ -732,7 +732,7 @@ class _MyPageState extends State<SalesPage> {
                             alignment: Alignment.center,
                             decoration: borderBRTDec(),
                             child: Text(
-                              "${((int.parse(_list_sales[index].declined_lead!) / int.parse(_list_sales[index].lead!)) * 100).toStringAsFixed(1)}%%",
+                              "${((int.parse(_list_sales[index].declined_lead!) / int.parse(_list_sales[index].lead!)) * 100).toStringAsFixed(1)}%",
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontFamily: 'Times',
