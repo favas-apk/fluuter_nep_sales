@@ -465,9 +465,11 @@ class _SchedulePageState extends State<SchedulePage> {
 
 
 
-                                              child: const Text("Demo",
+                                              child:
+                                              Text(
+                                                toCamelCase( _list_sch[index].ser_type.toString()),
 
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     color: Colors.black,
                                                     fontFamily: 'Mont',
                                                     fontSize: 18),
@@ -485,7 +487,8 @@ class _SchedulePageState extends State<SchedulePage> {
                                                   width: .25,
                                                 ),
                                               )),
-                                              child: Text(
+                                              child:
+                                              Text(
                                                toCamelCase( _list_sch[index].staff.toString()),
 
                                                 style: const TextStyle(
@@ -506,12 +509,13 @@ class _SchedulePageState extends State<SchedulePage> {
                                                       width: .25,
                                                     ),
                                                   )),
-                                              child: Text("",
-
+                                              child:
+                                              Text(
+                                                toCamelCase( _list_sch[index].area.toString()),
 
                                                 style: const TextStyle(
                                                     color: Colors.black,
-                                                    fontFamily: 'Times',
+                                                    fontFamily: 'Mont',
                                                     fontSize: 18),
                                               ),
                                             ),

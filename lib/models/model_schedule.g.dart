@@ -20,6 +20,8 @@ ModelSchedule _$ModelScheduleFromJson(Map<String, dynamic> json) =>
       staff: json['staff'] as String?,
       updatedtym: json['updatedtym'] as String?,
       remark: json['remark'] as String?,
+      ser_type: json['ser_type'] as String?,
+      area: json['area'] as String?,
     );
 
 Map<String, dynamic> _$ModelScheduleToJson(ModelSchedule instance) =>
@@ -36,4 +38,6 @@ Map<String, dynamic> _$ModelScheduleToJson(ModelSchedule instance) =>
       'staff': instance.staff,
       'updatedtym': instance.updatedtym,
       'remark': instance.remark,
+      'ser_type': instance.ser_type,
+      'area': instance.area,
     };

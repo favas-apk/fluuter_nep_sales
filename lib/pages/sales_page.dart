@@ -101,7 +101,7 @@ class _MyPageState extends State<SalesPage> {
   Future<String> _getLeadDeclEmp(String staffid) async
   {
 
-    String res="";
+    String res="0";
     for(int j=0;j<_details_lead_decl.length;j++)
     {
       if(_details_lead_decl[j]["staffid"]== staffid)
@@ -769,7 +769,7 @@ class _MyPageState extends State<SalesPage> {
                             height: 30,
                             alignment: Alignment.center,
                             decoration: borderBRTDec(),
-                            child: Text("${((int.parse(_list_sales[index].tot_days!) / int.parse(_list_sales[index].closed!)) ).toStringAsFixed(0)}",
+                            child: Text(((int.parse(_list_sales[index].tot_days!) / int.parse(_list_sales[index].closed!)) ).toStringAsFixed(0),
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontFamily: 'Times',

@@ -16,10 +16,12 @@ class ModelSchedule {
   String? staff;
   String? updatedtym;
   String? remark;
+  String? ser_type;
+  String? area;
 
 
 
-  ModelSchedule({this.tkt, this.dat, this.nepid, this.cus, this.desp, this.pccnt, this.mob, this.recno, this.st, this.staff, this.updatedtym, this.remark});
+  ModelSchedule({this.tkt, this.dat, this.nepid, this.cus, this.desp, this.pccnt, this.mob, this.recno, this.st, this.staff, this.updatedtym, this.remark,this.ser_type,this.area});
 
   factory ModelSchedule.fromJson(Map<String, dynamic> json) => _$ModelScheduleFromJson(json);
   Map<String, dynamic> toJson() => _$ModelScheduleToJson(this);

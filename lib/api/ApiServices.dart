@@ -41,5 +41,20 @@ class ApiServices {
   }
 
 
+  Future<dynamic> doLogin( String unam,String pswd) async {
+    var client = http.Client();
+    var response = await client.post(
+        Uri.https(ApiConstants.baseUrl, ApiConstants.loginEndpoint),
+        body: {
+          'db': 'neptongl_staff',
+          'unam': unam,
+          'pswd': pswd,
+        });
+    return response;
+  }
+
+
+
+
 
 }
