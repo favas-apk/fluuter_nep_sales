@@ -558,7 +558,7 @@ class _MyPageState extends State<SalesPage> {
                     height: 30,
                     child: const Center(
                         child: Text(
-                      "AVG CLOSING TIME",
+                      "AVG CLOSING DAYS",
                       style: TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.white),
                     )),
@@ -707,7 +707,7 @@ class _MyPageState extends State<SalesPage> {
                             alignment: Alignment.center,
                             decoration: borderBRDec(),
                             child: Text(
-                              "${((int.parse(_list_sales[index].closed!) / int.parse(_list_sales[index].demo!)) * 100).toStringAsFixed(0)}%",
+                              "${((int.parse(_list_sales[index].closed!) / int.parse(_list_sales[index].demo!)) * 100).toStringAsFixed(1)}%",
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontFamily: 'Times',

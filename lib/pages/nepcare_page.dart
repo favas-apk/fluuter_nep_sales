@@ -592,7 +592,7 @@ _showDatePicker(int type)
                       color: Colors.red
                     ),
                     child:  Center(child:
-                    Text(  _details_closed==null? '0' : (     ( (int.parse(_details_closed!.efr!) )  /(int.parse(_details_closed!.cn!) +    int.parse(_details_closed!.cs!) +  int.parse(_details_closed!.cp!)))*100   ).toStringAsFixed(2) ,style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.black),)
+                    Text(  _details_closed==null? '0' : (     (     (  (int.parse(_details_closed!.cn!) +    int.parse(_details_closed!.cs!) +  int.parse(_details_closed!.cp!))   )  / (int.parse(_details_closed!.efr!) )    )*100   ).toStringAsFixed(2) ,style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.black),)
 
                     ),
 
