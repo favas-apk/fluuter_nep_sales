@@ -15,7 +15,7 @@ class SalesPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<SalesPage> {
-  bool loading = false;
+
   late DateTime _from_date, _to_date;
 
   bool _first_time = true;
@@ -24,7 +24,7 @@ class _MyPageState extends State<SalesPage> {
   var _details_avg = [];
   var _details_lead_decl = [];
   var _details_demo_decl = [];
-
+  bool _loading=false;
   @override
   void initState() {
     DateTime now = DateTime.now();
@@ -140,6 +140,12 @@ class _MyPageState extends State<SalesPage> {
 
 
   Future<void> _read_sales() async {
+
+    setState(() {
+      _loading=true;
+    });
+
+
     _list_sales = [];
 
     var response = await ApiServices().readSales(
@@ -267,7 +273,9 @@ class _MyPageState extends State<SalesPage> {
       }
 
       //    print("tot is ${_list_sales.}");
-      setState(() {});
+      setState(() {
+        _loading=false;
+      });
     }
   }
 
@@ -283,509 +291,530 @@ class _MyPageState extends State<SalesPage> {
       _init();
     }
 
-    return (Scaffold(
+    return (
+        Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-          child: Column(
+          child: GestureDetector(
+
+            onVerticalDragUpdate: (details) async {
+                 await _read_sales();
+            },
+
+
+            child:
+
+            _loading==true?       SizedBox(
+                height:( MediaQuery.of(context).size.height -200 ),
+                width: MediaQuery.of(context).size.width,
+                child: Center(child:
+                Transform.scale(
+                    scale: 0.7,
+                    child: const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Colorss.nepton1),
+                    ))
+                )) : Column(
         children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.05,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 5, right: 5),
-              child: Container(
-                height: 40,
-                decoration: const BoxDecoration(
-                    border: Border(
-                  bottom: BorderSide(
-                    color: Colors.blueGrey,
-                    width: 0.7,
-                  ),
-                )),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          child: const Text('From')),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.30,
-                        child: InkWell(
-                            onTap: () {
-                              showCupertinoModalPopup<void>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return buildBottomPicker(
-                                    context,
-                                    CupertinoDatePicker(
-                                      mode: CupertinoDatePickerMode.date,
-                                      initialDateTime: _from_date,
-                                      onDateTimeChanged:
-                                          (DateTime newDateTime) async {
-                                        if (mounted) {
-                                          _from_date = newDateTime;
-                                          _list_sales.clear();
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.05,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 5, right: 5),
+                child: Container(
+                  height: 40,
+                  decoration: const BoxDecoration(
+                      border: Border(
+                    bottom: BorderSide(
+                      color: Colors.blueGrey,
+                      width: 0.7,
+                    ),
+                  )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.18,
+                            child: const Text('From')),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.30,
+                          child: InkWell(
+                              onTap: () {
+                                showCupertinoModalPopup<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return buildBottomPicker(
+                                      context,
+                                      CupertinoDatePicker(
+                                        mode: CupertinoDatePickerMode.date,
+                                        initialDateTime: _from_date,
+                                        onDateTimeChanged:
+                                            (DateTime newDateTime) async {
+                                          if (mounted) {
+                                            _from_date = newDateTime;
+                                            _list_sales.clear();
 
-                                          await _read_sales();
-                                          // print("Your Selected Date: ${newDateTime.day}");
-                                        }
-                                      },
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: Text(
-                              ConvertDate_from_yyyymmdd_to_ddmmyyyy(
-                                  _from_date.toString().substring(0, 10),
-                                  monthNameNeeded: false),
-                              style: const TextStyle(
-                                  color: Colorss.nepton1,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                      ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.15,
-                          child: const Text('To')),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.30,
-                        child: InkWell(
-                            onTap: () {
-                              showCupertinoModalPopup<void>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return buildBottomPicker(
-                                    context,
-                                    CupertinoDatePicker(
-                                      mode: CupertinoDatePickerMode.date,
-                                      initialDateTime: _to_date,
-                                      onDateTimeChanged:
-                                          (DateTime newDateTime) async {
-                                        if (mounted) {
-                                          if (newDateTime
-                                              .isBefore(_from_date)) {
-                                            showToast(
-                                                "Please choose a date ie higher than  'From Date' ");
-                                            return;
+                                            await _read_sales();
+                                            // print("Your Selected Date: ${newDateTime.day}");
                                           }
-                                          _to_date = newDateTime;
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Text(
+                                ConvertDate_from_yyyymmdd_to_ddmmyyyy(
+                                    _from_date.toString().substring(0, 10),
+                                    monthNameNeeded: false),
+                                style: const TextStyle(
+                                    color: Colorss.nepton1,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                        ),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.15,
+                            child: const Text('To')),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.30,
+                          child: InkWell(
+                              onTap: () {
+                                showCupertinoModalPopup<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return buildBottomPicker(
+                                      context,
+                                      CupertinoDatePicker(
+                                        mode: CupertinoDatePickerMode.date,
+                                        initialDateTime: _to_date,
+                                        onDateTimeChanged:
+                                            (DateTime newDateTime) async {
+                                          if (mounted) {
+                                            if (newDateTime
+                                                .isBefore(_from_date)) {
+                                              showToast(
+                                                  "Please choose a date ie higher than  'From Date' ");
+                                              return;
+                                            }
+                                            _to_date = newDateTime;
 
 
-                                          await _read_sales();
-                                        }
-                                      },
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: Text(
-                              ConvertDate_from_yyyymmdd_to_ddmmyyyy(
-                                  _to_date.toString().substring(0, 10),
-                                  monthNameNeeded: false),
-                              style: const TextStyle(
-                                  color: Colorss.nepton1,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                      ),
-                    ],
+                                            await _read_sales();
+                                          }
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Text(
+                                ConvertDate_from_yyyymmdd_to_ddmmyyyy(
+                                    _to_date.toString().substring(0, 10),
+                                    monthNameNeeded: false),
+                                style: const TextStyle(
+                                    color: Colorss.nepton1,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 100,
-                  ),
-                  Container(
-                    decoration: borderTLRDecWthBgColor(),
-                    width: 150,
-                    height: 30,
-                    child: const Center(
-                        child: Text(
-                      "LEAD",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 12),
-                    )),
-                  ),
-                  Container(
-                    decoration: borderTLRDecWthBgColor(),
-                    width: 150,
-                    height: 30,
-                    child: const Center(
-                        child: Text(
-                      "DEMO",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    )),
-                  ),
-                  Container(
-                    decoration: borderTLRDecWthBgColor(),
-                    width: 150,
-                    height: 30,
-                    child: const Center(
-                        child: Text(
-                      "IMPLEMENTATION",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    )),
-                  ),
-                  Container(
-                    decoration: borderTLRDecWthBgColor(),
-                    width: 150,
-                    height: 30,
-                    child: const Center(
-                        child: Text(
-                      "INVOICE PENDING",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    )),
-                  ),
-                  Container(
-                    decoration: borderTLRDecWthBgColor(),
-                    width: 150,
-                    height: 30,
-                    child: const Center(
-                        child: Text(
-                      "CLOSED",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    )),
-                  ),
-                  Container(
-                    decoration: borderTLRDecWthBgColor(),
-                    width: 150,
-                    height: 30,
-                    child: const Center(
-                        child: Text(
-                      "DECLINED",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    )),
-                  ),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    height: 30,
-                    child: Container(
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 100,
+                    ),
+                    Container(
                       decoration: borderTLRDecWthBgColor(),
                       width: 150,
                       height: 30,
                       child: const Center(
                           child: Text(
-                        "SUCCESS RATE",
+                        "LEAD",
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 12),
                       )),
                     ),
-                  ),
-                  Container(
-                    decoration: borderTLRDecWthBgColor(),
-                    width: 150,
-                    height: 30,
-                    child: const Center(
-                        child: Text(
-                      "LEAD-CLOSE",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    )),
-                  ),
-                  Container(
-                    decoration: borderTLRDecWthBgColor(),
-                    width: 150,
-                    height: 30,
-                    child: const Center(
-                        child: Text(
-                      "DEMO-CLOSE",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    )),
-                  ),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    height: 30,
-                    child: Container(
+                    Container(
                       decoration: borderTLRDecWthBgColor(),
                       width: 150,
                       height: 30,
                       child: const Center(
                           child: Text(
-                        "DECLINE RATE",
+                        "DEMO",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.white),
                       )),
                     ),
-                  ),
-                  Container(
-                    decoration: borderTLRDecWthBgColor(),
-                    width: 150,
-                    height: 30,
-                    child: const Center(
-                        child: Text(
-                      "LEAD-DECLINE",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    )),
-                  ),
-                  Container(
-                    decoration: borderTLRDecWthBgColor(),
-                    width: 150,
-                    height: 30,
-                    child: const Center(
-                        child: Text(
-                      "DEMO-DECLINE",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    )),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    decoration: BorderDecWthBgColor(),
-                    width: 150,
-                    height: 30,
-                    child: const Center(
-                        child: Text(
-                      "AVG CLOSING DAYS",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    )),
-                  ),
-                  Container(
-                    decoration: borderTLRDecWthBgColor(),
-                    width: 150,
-                    height: 30,
-                    child: const Center(
-                        child: Text(
-                      "LEAD-CLOSE",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    )),
-                  ),
-                ],
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: 610,
-                child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount: _list_sales.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext ctx, index) {
-                      print("this ${_list_sales[0].declined_lead}");
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 100,
-                            alignment: Alignment.center,
-                            decoration: borderTBLDecWthBgColor(),
-                            child: Transform.rotate(
-                                angle: 270 * (Constants.pi / 180),
-                                child: Text(
-                                  (toCamelCase(_list_sales[index].staff!)),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                          ),
-                          Container(
-                            width: 60,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: borderBRDec(),
+                    Container(
+                      decoration: borderTLRDecWthBgColor(),
+                      width: 150,
+                      height: 30,
+                      child: const Center(
+                          child: Text(
+                        "IMPLEMENTATION",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      )),
+                    ),
+                    Container(
+                      decoration: borderTLRDecWthBgColor(),
+                      width: 150,
+                      height: 30,
+                      child: const Center(
+                          child: Text(
+                        "INVOICE PENDING",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      )),
+                    ),
+                    Container(
+                      decoration: borderTLRDecWthBgColor(),
+                      width: 150,
+                      height: 30,
+                      child: const Center(
+                          child: Text(
+                        "CLOSED",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      )),
+                    ),
+                    Container(
+                      decoration: borderTLRDecWthBgColor(),
+                      width: 150,
+                      height: 30,
+                      child: const Center(
+                          child: Text(
+                        "DECLINED",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      )),
+                    ),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      height: 30,
+                      child: Container(
+                        decoration: borderTLRDecWthBgColor(),
+                        width: 150,
+                        height: 30,
+                        child: const Center(
                             child: Text(
-                              (_list_sales[index].lead).toString(),
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Times',
-                                  fontSize: 18),
-                            ),
-                          ),
-                          Container(
-                            width: 60,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: borderBRDec(),
+                          "SUCCESS RATE",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
+                        )),
+                      ),
+                    ),
+                    Container(
+                      decoration: borderTLRDecWthBgColor(),
+                      width: 150,
+                      height: 30,
+                      child: const Center(
+                          child: Text(
+                        "LEAD-CLOSE",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      )),
+                    ),
+                    Container(
+                      decoration: borderTLRDecWthBgColor(),
+                      width: 150,
+                      height: 30,
+                      child: const Center(
+                          child: Text(
+                        "DEMO-CLOSE",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      )),
+                    ),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      height: 30,
+                      child: Container(
+                        decoration: borderTLRDecWthBgColor(),
+                        width: 150,
+                        height: 30,
+                        child: const Center(
                             child: Text(
-                              (_list_sales[index].demo).toString(),
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Times',
-                                  fontSize: 18),
+                          "DECLINE RATE",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
+                        )),
+                      ),
+                    ),
+                    Container(
+                      decoration: borderTLRDecWthBgColor(),
+                      width: 150,
+                      height: 30,
+                      child: const Center(
+                          child: Text(
+                        "LEAD-DECLINE",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      )),
+                    ),
+                    Container(
+                      decoration: borderTLRDecWthBgColor(),
+                      width: 150,
+                      height: 30,
+                      child: const Center(
+                          child: Text(
+                        "DEMO-DECLINE",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      )),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                      decoration: BorderDecWthBgColor(),
+                      width: 150,
+                      height: 30,
+                      child: const Center(
+                          child: Text(
+                        "AVG CLOSING DAYS",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      )),
+                    ),
+                    Container(
+                      decoration: borderTLRDecWthBgColor(),
+                      width: 150,
+                      height: 30,
+                      child: const Center(
+                          child: Text(
+                        "LEAD-CLOSE",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      )),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: 610,
+                  child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount: _list_sales.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext ctx, index) {
+                        print("this ${_list_sales[0].declined_lead}");
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 60,
+                              height: 100,
+                              alignment: Alignment.center,
+                              decoration: borderTBLDecWthBgColor(),
+                              child: Transform.rotate(
+                                  angle: 270 * (Constants.pi / 180),
+                                  child: Text(
+                                    (toCamelCase(_list_sales[index].staff!)),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  )),
                             ),
-                          ),
-                          Container(
-                            width: 60,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: borderBRDec(),
-                            child: Text(
-                              (_list_sales[index].imp).toString(),
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Times',
-                                  fontSize: 18),
+                            Container(
+                              width: 60,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: borderBRDec(),
+                              child: Text(
+                                (_list_sales[index].lead).toString(),
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Times',
+                                    fontSize: 18),
+                              ),
                             ),
-                          ),
-                          Container(
-                            width: 60,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: borderBRDec(),
-                            child: Text(
-                              (_list_sales[index].pend).toString(),
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Times',
-                                  fontSize: 18),
+                            Container(
+                              width: 60,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: borderBRDec(),
+                              child: Text(
+                                (_list_sales[index].demo).toString(),
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Times',
+                                    fontSize: 18),
+                              ),
                             ),
-                          ),
-                          Container(
-                            width: 60,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: borderBRDec(),
-                            child: Text(
-                              (_list_sales[index].closed).toString(),
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Times',
-                                  fontSize: 18),
+                            Container(
+                              width: 60,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: borderBRDec(),
+                              child: Text(
+                                (_list_sales[index].imp).toString(),
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Times',
+                                    fontSize: 18),
+                              ),
                             ),
-                          ),
-                          Container(
-                            width: 60,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: borderBRDec(),
-                            child: Text(
-                              (_list_sales[index].declined).toString(),
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Times',
-                                  fontSize: 18),
+                            Container(
+                              width: 60,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: borderBRDec(),
+                              child: Text(
+                                (_list_sales[index].pend).toString(),
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Times',
+                                    fontSize: 18),
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 60,
-                            height: 30,
-                          ),
-                          const SizedBox(
-                            width: 60,
-                            height: 30,
-                          ),
-                          Container(
-                            width: 60,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: borderBRTDec(),
-                            child: Text("${((int.parse(_list_sales[index].closed!) / int.parse(_list_sales[index].lead!)) * 100).toStringAsFixed(1)}%",
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Times',
-                                  fontSize: 18),
+                            Container(
+                              width: 60,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: borderBRDec(),
+                              child: Text(
+                                (_list_sales[index].closed).toString(),
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Times',
+                                    fontSize: 18),
+                              ),
                             ),
-                          ),
-                          Container(
-                            width: 60,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: borderBRDec(),
-                            child: Text(
-                              "${((int.parse(_list_sales[index].closed!) / int.parse(_list_sales[index].demo!)) * 100).toStringAsFixed(1)}%",
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Times',
-                                  fontSize: 18),
+                            Container(
+                              width: 60,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: borderBRDec(),
+                              child: Text(
+                                (_list_sales[index].declined).toString(),
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Times',
+                                    fontSize: 18),
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 60,
-                            height: 30,
-                          ),
-                          const SizedBox(
-                            width: 60,
-                            height: 30,
-                          ),
+                            const SizedBox(
+                              width: 60,
+                              height: 30,
+                            ),
+                            const SizedBox(
+                              width: 60,
+                              height: 30,
+                            ),
+                            Container(
+                              width: 60,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: borderBRTDec(),
+                              child: Text("${((int.parse(_list_sales[index].closed!) / int.parse(_list_sales[index].lead!)) * 100).toStringAsFixed(1)}%",
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Times',
+                                    fontSize: 18),
+                              ),
+                            ),
+                            Container(
+                              width: 60,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: borderBRDec(),
+                              child: Text(
+                                "${((int.parse(_list_sales[index].closed!) / int.parse(_list_sales[index].demo!)) * 100).toStringAsFixed(1)}%",
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Times',
+                                    fontSize: 18),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 60,
+                              height: 30,
+                            ),
+                            const SizedBox(
+                              width: 60,
+                              height: 30,
+                            ),
 
 
 
 
-                          Container(
-                            width: 60,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: borderBRTDec(),
-                            child: Text(
-                              "${((int.parse(_list_sales[index].declined_lead!) / int.parse(_list_sales[index].lead!)) * 100).toStringAsFixed(1)}%",
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Times',
-                                  fontSize: 18),
+                            Container(
+                              width: 60,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: borderBRTDec(),
+                              child: Text(
+                                "${((int.parse(_list_sales[index].declined_lead!) / int.parse(_list_sales[index].lead!)) * 100).toStringAsFixed(1)}%",
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Times',
+                                    fontSize: 18),
+                              ),
                             ),
-                          ),
-                          Container(
-                            width: 60,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: borderBRDec(),
-                            child:     Text(
-                              "${((int.parse(_list_sales[index].declined_demo!) / int.parse(_list_sales[index].demo!)) * 100).toStringAsFixed(1)}%",
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Times',
-                                  fontSize: 18),
-                            ),
-                          ),
-
-
-
-
-                          const SizedBox(
-                            width: 60,
-                            height: 30,
-                          ),
-                          const SizedBox(
-                            width: 60,
-                            height: 30,
-                          ),
-
-                          Container(
-                            width: 60,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: borderBRTDec(),
-                            child: Text(((int.parse(_list_sales[index].tot_days!) / int.parse(_list_sales[index].closed!)) ).toStringAsFixed(0),
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Times',
-                                  fontSize: 18),
+                            Container(
+                              width: 60,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: borderBRDec(),
+                              child:     Text(
+                                "${((int.parse(_list_sales[index].declined_demo!) / int.parse(_list_sales[index].demo!)) * 100).toStringAsFixed(1)}%",
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Times',
+                                    fontSize: 18),
+                              ),
                             ),
 
-                          ),
-                        ],
-                      );
-                    }),
-              ),
-            ],
-          ),
+
+
+
+                            const SizedBox(
+                              width: 60,
+                              height: 30,
+                            ),
+                            const SizedBox(
+                              width: 60,
+                              height: 30,
+                            ),
+
+                            Container(
+                              width: 60,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: borderBRTDec(),
+                              child: Text(((int.parse(_list_sales[index].tot_days!) / int.parse(_list_sales[index].closed!)) ).toStringAsFixed(0),
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Times',
+                                    fontSize: 18),
+                              ),
+
+                            ),
+                          ],
+                        );
+                      }),
+                ),
+              ],
+            ),
         ],
-      )),
+      ),
+          )),
     ));
   }
 }

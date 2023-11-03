@@ -269,7 +269,8 @@ var _prefs ;
                         Align(
                           alignment: Alignment.center,
                           child: loading == true
-                              ? Transform.scale(
+                              ?
+                          Transform.scale(
                                   scale: 0.7,
                                   child: const CircularProgressIndicator(
                                     valueColor: AlwaysStoppedAnimation<Color>(
